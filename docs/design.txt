@@ -1,0 +1,36 @@
+Design document
+===============
+This document describes the mailfetcher module for the arbit project tracker
+
+Why
+===
+There are several use cases for using mails in arbit, for example a
+mailing list archive
+or an mail2task converter. With this module there is no need to
+re-implement the mail
+retrieval for every new module which wants to parse mails.
+
+How
+===
+The mailfetcher should run as a (1-10) minutely “periodic” task. The mailfetcher
+should accept multiple mail accounts. To distinguish which mail comes from which
+mail account every account should have an alias name. Every mail retrieved from
+an account will be send as a signal together with the account alias.
+Now every other module which wants to parse mails can listen to this
+signal and can do whatever it want to do with this message.
+
+First steps
+===========
+The first Basic implementation would use POP3 and IMAP, which are the most
+common use cases, later also MBOX. The first POP3 implementation would
+use fetch+delete to determine which mails are already fetched and which not.
+The IMAP implementation could use also fetch+delete but also use the
+“read” status.
+The “only new” mail method should also be implemented in POP3 ASAP.
+It should also be configurable how many mails at once should be fetched.
+There could be problems at initial import or high traffic mailboxes
+with the “fetchAll” method.
+
+Libarys
+=======
+The zetaComponents Mail System would be the natural choice for this module.
