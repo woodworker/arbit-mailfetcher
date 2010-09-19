@@ -59,16 +59,21 @@ class arbitModuleMailfetcherAdminCliTool extends arbitFrameworkActionCliTool
         ),
         'inject' => array(
             'action'      => 'inject',
-            'description' => 'Inject a amil to the system.',
+            'description' => 'Inject a mail to the system.',
         )
     );
 
+    /**
+     * register a cli options
+     *
+     * at the moment only needed for the inject action
+     */
     protected function  registerOptions()
     {
         $this->in->registerOption( new ezcConsoleOption(
             'a', 'account',
             ezcConsoleInput::TYPE_STRING, null, false,
-            'Markup used for output, one of: js, xml or txt. Defaults to txt.'
+            'Account name for the injected mail'
         ) );
 
         parent::registerOptions();
