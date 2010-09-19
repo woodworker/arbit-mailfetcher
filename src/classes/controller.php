@@ -31,22 +31,53 @@
  */
 class arbitModuleMailfetcherController extends arbitController
 {
-    protected function emitMailfetcherRecived( ezcMail $mail ) {
+    /**
+     * emit mailfetcherRecived signal to the system
+     *
+     * @param ezcMail $mail
+     */
+    protected function emitMailfetcherRecived( $mailaccount , ezcMail $mail )
+    {
         arbitSignalSlot::emit(
             'mailfetcherReceived',
             new arbitMailfetcherReceivedStruct(
-                'mailaccount',
+                $mailaccount,
                 $mail,
                 new DateTime()
             )
         );
     }
 
-    public function fetch(arbitRequest $request) {
-
+    /**
+     * this method fetches all the mail
+     *
+     * @param arbitRequest $request
+     * @return arbitViewModuleModel
+     */
+    public function fetch( arbitRequest $request )
+    {
         $mail = new ezcMail();
         $this->emitMailfetcherRecived($mail);
         
         return new arbitViewModuleModel( $request->action, array(), new arbitViewUserMessageModel( 'Fetched Mails.' ) );
+    }
+
+    /**
+     *
+     * @param arbitRequest $request
+     */
+    public function inject( arbitRequest $request )
+    {
+        $account = $request->variables['account'];
+        $mails = $request->variables['mails'];
+
+        $i = 0;
+        foreach ( $mails as $oneMail ) {
+            /* @var $oneMail ezcMail */
+            $this->emitMailfetcherRecived( $account , $oneMail );
+            $i++;
+        }
+
+        return new arbitViewModuleModel( $request->action, array(), new arbitViewUserMessageModel( "Injected $i Mails.\n" ) );
     }
 }

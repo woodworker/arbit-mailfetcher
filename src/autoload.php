@@ -29,6 +29,8 @@
  * # scripts/gen_autoload_files.php
  */
 return array(
+    'arbitModuleMailfetcherNoAccountGivenException' => 'modules/mailfetcher/classes/exceptions.php',
+    'arbitModuleMailfetcherPipeSet'         => 'modules/mailfetcher/classes/mail/parserpipe.php',
     'arbitModuleMailfetcherAdminCliTool'    => 'modules/mailfetcher/classes/cli_tool.php',
     'arbitModuleMailfetcherFetchCommand'    => 'modules/mailfetcher/classes/commands/fetch.php',
     'arbitMailfetcherReceivedStruct'        => 'modules/mailfetcher/classes/signals/received.php',

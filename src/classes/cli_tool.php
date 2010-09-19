@@ -57,7 +57,22 @@ class arbitModuleMailfetcherAdminCliTool extends arbitFrameworkActionCliTool
             'action'      => 'fetch',
             'description' => 'Fetch the mails from all defined mailaccounts.',
         ),
+        'inject' => array(
+            'action'      => 'inject',
+            'description' => 'Inject a amil to the system.',
+        )
     );
+
+    protected function  registerOptions()
+    {
+        $this->in->registerOption( new ezcConsoleOption(
+            'a', 'account',
+            ezcConsoleInput::TYPE_STRING, null, false,
+            'Markup used for output, one of: js, xml or txt. Defaults to txt.'
+        ) );
+
+        parent::registerOptions();
+    }
 
     /**
      * Get controller
@@ -81,7 +96,21 @@ class arbitModuleMailfetcherAdminCliTool extends arbitFrameworkActionCliTool
         );
         $request->subaction = $action;
 
+        $options = $this->getOptions();
+
+        if( $options['account']==false )
+        {
+            throw new arbitModuleMailfetcherNoAccountGivenException('You need to name an account', array());
+        }
+
+        $set = new arbitModuleMailfetcherPipeSet();
+
+        $p = new ezcMailParser();
+        $mails = $p->parseMail($set);
+
+        $request->variables['account'] = $options['account'];
+        $request->variables['mails'] = $mails;
+
         return new arbitModuleMailfetcherController( $this->actions[$action]['action'], $request );
     }
 }
-
